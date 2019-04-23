@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript" src="js/jquery-3.3.1.js"></script>
+<script type="text/javascript">
+	//页面就绪函数	
+	$(function(){
+		$.ajax({
+			"url" : "/ajax/channel",
+			"data" : {"level" : "1"},
+			"type" : "get" , 
+			"dataType" : "json" , 
+			"success" : function(json){
+				console.log(json);
+				for(var i = 0 ; i < json.length ; i++){
+					var ch = json[i];
+					$("#lv1").append("<option value='" + ch.code + "'>" + ch.name + "</option>")
+				}
+			}
+		})
+	})
+	
+	//联动上级的数据并对其进行改变	
+	$(function(){
+		$("#lv1").on("change" , function(){
+			var parent = $(this).val();
+			console.log(parent);
+			$.ajax({
+				"url" : "/ajax/channel" , 
+				"data" : {"level" : "2" , "parent" : parent},
+				"dataType" : "json" , 
+				"type" : "get" ,
+				"success" : function(json){
+					console.log(json);
+					//移除所有lv2下的原始option选项
+					$("#lv2>option").remove();
+					for(var i = 0 ; i < json.length ; i++){
+						var ch = json[i];
+						$("#lv2").append("<option value='" + ch.code +"'>" + ch.name + "</option>")
+					}
+				}
+			})
+		})
+	})
+
+</script>
+</head>
+<body>
+<select id="lv1" style="width:200px;height:30px">
+	<option selected="selected">请选择</option>
+</select>
+<!-- 在一级菜单选中的情况下，自动对二级菜单进行加载	 -->
+<select id="lv2" style="width:200px;height:30px"></select>
+</body>
+</html>

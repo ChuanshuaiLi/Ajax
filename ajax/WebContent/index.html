@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<input id="btnLoad" type="button" value="加载">
+	<div id="divContent"></div>
+	<script>
+		//在按钮上实现点击事件
+		document.getElementById("btnLoad").onclick = function(){
+			//使用ajax要通过三个步骤
+			
+			//1. 创建XmlHttpRequest对象
+			var xmlhttp;
+			//根据window.XMLHttpRequest是否存在，决定XmlHttpRequest对象的创建方式
+			if(window.XMLHttpRequest){
+				xmlhttp = new XMLHttpRequest();
+			}else{
+				xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+			}
+			console.log(xmlhttp);
+			//2. 发送Ajax请求
+			//open的参数分别是：请求方式、要发送至的url地址、同步或者异步(ture代表同步false代表异步) 
+			xmlhttp.open("GET" , "/ajax/content" , true);
+			xmlhttp.send();
+			//3. 处理服务器响应
+			xmlhttp.onreadystatechange = function(){
+				//响应已被接受且服务器处理成功时响应
+				if(xmlhttp.readyState == 4 && xmlhttp.status == 200){
+					//获取响应体的文本
+					var t = xmlhttp.responseText;
+					//对服务器结果进行处理	
+					alert(t);
+					document.getElementById("divContent").innerHTML = t;
+				}
+			}
+		}
+	</script>
+</body>
+</html>
